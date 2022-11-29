@@ -87,21 +87,158 @@
     </section>
   </main>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "bac850d547654e0281e79098e5e8e538"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+                        
+
+  <script>
+    TrackJS.track('Testing TrackJS!');
+                        
+    // Step 4 - Custom Errors
+    class InvalidInputError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "InvalidInputError";
+      }
+    }
+
+    // Step 5 - The Global Error handler and 3rd Party Tracking
+    window.onerror = function (msg, url, line) {
+      let e = {
+        message: msg,
+        url: url,
+        line: line
+      };
+      TrackJS.track(e);
+    }
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
       let output = document.querySelector('output');
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
+
+      // Step 4 - Throw
+      if (firstNum != firstNum - 0) { throw new InvalidInputError("first number is of invalid format"); }
+      if (secondNum != secondNum - 0) { throw new InvalidInputError("second number is of invalid format"); }
+
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      // Step 3 - Trying Try/Catch
+      try {
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (e) {
+        throw new Error("Expression could not be evaluated.");
+      } finally {
+        console.log("This will always print.");
+      }
+      
     });
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+    
+    // Step 2 - Adding Buttons for Console Testing
+    let errBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
-    // Start your code here
-    // You may move this JS to another file if you wish
+    let logBtn = errBtns[0];
+    logBtn.addEventListener('click', () => {
+      console.log('Console Log Demo');
+    });
+
+    let errBtn = errBtns[1];
+    errBtn.addEventListener('click', () => {
+      console.error('Console Error Demo');
+    });
+
+    let countBtn = errBtns[2];
+    countBtn.addEventListener('click', () => {
+      console.count('Count Button Demo');
+    });
+
+    let warnBtn = errBtns[3];
+    warnBtn.addEventListener('click', () => {
+      console.warn('Warn Button Demo');
+    });
+
+    let assertBtn = errBtns[4];
+    assertBtn.addEventListener('click', () => {
+      let n = 4;
+      console.assert(n == 2, n);
+    });
+
+    let clearBtn = errBtns[5];
+    clearBtn.addEventListener('click', () => {
+      console.clear();
+    });
+
+    let dirBtn = errBtns[6];
+    dirBtn.addEventListener('click', () => {
+      console.dir(dirBtn);
+    });
+
+    let dirXmlBtn = errBtns[7];
+    dirXmlBtn.addEventListener('click', () => {
+      console.dirxml(dirXmlBtn);
+    });
+
+    let groupBtn = errBtns[8];
+    groupBtn.addEventListener('click', () => {
+      console.group();
+    });
+
+    let groupEndBtn = errBtns[9];
+    groupEndBtn.addEventListener('click', () => {
+      console.groupEnd();
+    });
+
+    let tableBtn = errBtns[10];
+    tableBtn.addEventListener('click', () => {
+      let cars = [
+        {manufacturer: "Honda", model: 2005},
+        {manufacturer: "Ford", model: 2002},
+        {manufacturer: "Acura", model: 2018}
+      ];
+
+      console.table(cars);
+    });
+
+    let timeBtn = errorBtns[11];
+    timeBtn.addEventListener('click', () => {
+      console.time('timer');
+    });
+
+    let timeEndBtn = errorBtns[12];
+    timeEndBtn.addEventListener('click', () => {
+      console.timeEnd('timer');
+    });
+
+    let one = function () {
+      let two = function () {
+        let three = function () {
+          console.trace('Trace Demo');
+        }
+        three();
+      }
+      two();
+    }
+
+    let traceBtn = errorBtns[13];
+    traceBtn.addEventListener('click', () => {
+      one();
+    });
+
+    let globalBtn = errorBtns[14];
+    globalBtn.addEventListener('click', () => {
+      globaleventtriggered();
+    });
+
+    // Part 2 Finished
+
   </script>
 </body>
 
